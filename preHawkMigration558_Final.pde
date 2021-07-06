@@ -267,20 +267,6 @@ void setup() {
   vulture = loadImage("vulture.png");
   accipiter = loadImage("accipiter.png");
   unid = loadImage("unid.png");
-  // Parson comment - I am going to plot Duration (60 mins = 60 frames)
-  // against a vertical of TOTAL raptors. A full implementation needs
-  // to color-code and/or PShape-code each species separately so
-  // you can see distinct species. Also use FlightDIR to plot the
-  // path crossing North Lookout (mine just goes due North-to-South),
-  // display cloud cover semi-transparent, and use WindDir to set
-  // direction of clouds and maybe make the leaves blow in an advanced
-  // version. I am adding one keyboard command 'S' for now to skip over
-  // TOTAL=0 frames, and am plotting the timestamp in the lower left
-  // in white. I can extend the file reader into a full ARFF reader
-  // some day. For now it is .csv with no commas allowed in strings.
-  // "NorthLookout.png" is 1920 X 1080 (1080p), try to keep that aspect
-  // ratio to avoid distortion (better: make a better map image that
-  // fits the eventual display, although this is good for now), with
   StartIndex = attrNameToIndex.get("Start").intValue();  // datetime
   DurationIndex = attrNameToIndex.get("Duration").intValue(); // numeric
   TOTALIndex = attrNameToIndex.get("TOTAL").intValue(); // numeric
@@ -311,7 +297,6 @@ float [] IntervalDurationRemaining = {-1, -1};
 float [][] IntervalPerlinxOffset = { null, null }; // PARSON 23Apr
 
 final float IntervalDurationSlowdown = 1 ; // don't plot too fast
-// TO BE REPLACED BY SOMTHING MUCH BETTER!!!
 
 void IntervalInitialFlightDemo() {
   // At start of an observation period, start raptor trace at top
@@ -355,11 +340,11 @@ void IntervalInitialFlightDemo() {
   
   // from here on, the center point is (0,0)
   translate(NorthLookoutX, NorthLookoutY);
-  // PARSON ADD 4/11 Above translate applies before both FlightDIR's rotate and
+  // Above translate applies before both FlightDIR's rotate and
   // WindDir's rotate, but those rotates are separate, and should each be surrounded
   // by their own respective push()/pop() pairs. Both run under the scope of
   // the above translate(), which should not be pop()d until they are done.
-  push();  // PARSON 4/11 START OF FlightDIR push()/pop() pair
+  push();  // START OF FlightDIR push()/pop() pair
   
   flightDir = fetchFloat("FlightDIR", currentInstance, flightDir); // PARSON ADD 4/11
   //only place to call the trig func
@@ -373,14 +358,7 @@ void IntervalInitialFlightDemo() {
   //float windDir = fetchFloat("WindDir", currentInstance, -10000);
   //windDir = windDir - 90;
 
-  // IMPORTANT: to use flightDir, do a nested push(), then rotate per
-  // flightDir, then plot the birds, then pop(). Do this under the
-  // scope of the above translate so that rotate is around NorthLook.
-  // The path will then be *longer* than the vertical height, so use
-  // trig to find the vertical length. We can go over that. For now
-  // IntervalInitialFlightDemo assume flightDir is North, 0 degrees.
-  // Also, after this nested pop, do another push()-pop() pair,
-  // in between which move the clouds based on windDir.
+
   float durationPast = (IntervalDurationTotal[IntervalFrame]
     - IntervalDurationRemaining[IntervalFrame]);
   int birdsToPlot = round(IntervalTotal[IntervalFrame]) ;
@@ -389,7 +367,7 @@ void IntervalInitialFlightDemo() {
   //int topLength = NorthLookoutY ;  
   //int pixelsPerBird = (birdsToPlot <= 0) ? 0 : (flightLength/birdsToPlot) ;
   
-  // START OF PARSON ADD LENGTH OF ROTATE PATH
+  // START OF ADD LENGTH OF ROTATE PATH
   int flightLength = round(pathTotal) ;
   int topLength = round(pathlenBefore);
   int pixelsPerBird = (birdsToPlot <= 0) ? 0 : (flightLength/birdsToPlot) ;
@@ -407,7 +385,7 @@ void IntervalInitialFlightDemo() {
   }
 
   
-  // END OF PARSON ADD LENGTH OF ROTATE PATH
+  // END OF ADD LENGTH OF ROTATE PATH
   int priorIntervalFrame = 1 - IntervalFrame ;
   if (IntervalTotal[priorIntervalFrame] > 0) {
     // In this case don't make the last observation just disappear! Show them.
@@ -418,7 +396,7 @@ void IntervalInitialFlightDemo() {
     birdsToPlot = round(IntervalTotal[priorIntervalFrame]) ;
     pixelsPerBird = (birdsToPlot <= 0) ? 0 : (flightLength/birdsToPlot) ;
     //println("DEBUG OLD birdsToPlot = " + birdsToPlot + " pixelsPerBird = " + pixelsPerBird);
-    fill(0); // PARSON 19Apr make departing dots black for debugging
+    fill(0);
     for (int i = 0 ; i < birdsToPlot ; i++) {
       // 23Apr PARSON added perlixix
       int perlinix = i % IntervalPerlinxOffset[priorIntervalFrame].length ;
@@ -434,15 +412,8 @@ void IntervalInitialFlightDemo() {
     + birdsToPlot + " pixelsPerBird = " + pixelsPerBird);
   */
   popMatrix();
-  pop() ; // // PARSON 4/11 END OF FlightDIR push()/pop() pair
-  
-  // PARSON to FAITH: I recommend doing a push() here, then rotating by
-  // either rotate(radians(WindDir)) or rotate(radians(Windir+180.0)), which ever
-  // works, and then drawing clouds DUE north-to-south or south-to-north,
-  // i.e., 0 degrees or 180 degrees, and let the rotate take care of direction
-  // of travel. Finish it up with a pop(). Also, I think a Celsius thermometer off
-  // to the side would be cool; maybe we should have 4? of them to show prior days'
-  // temp per csc458 lagged temperatures, since we know that to be important?
+  pop() ; // // 4/11 END OF FlightDIR push()/pop() pair
+ 
   
   //temperature 
   float temp = fetchFloat("Temp", currentInstance, -10000);
