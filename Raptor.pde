@@ -11,7 +11,7 @@ void setupSpeciesToImage() {
     speciesToImage.put(name, loadImage(name));
   }
 }
-// PARSON 19Apr end of preload PImages
+// 19Apr end of preload PImages
 
 // Raptor class to display raptor image
 public class Raptor{
@@ -65,12 +65,6 @@ public class Raptor{
   }
 }
 
-  //hawk = loadImage("hawk.png");
-  //eagle = loadImage("eagle.png");
-  //falcon = loadImage("falcon.png");
-  //vulture = loadImage("vulture.png");
-  //accipiter = loadImage("accipiter.png");
-  //unid = loadImage("unid.png");
   
   //attrNameToIndex.get("BE").intValue()
    
